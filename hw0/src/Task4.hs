@@ -31,4 +31,3 @@ mapFix = fix helpFunction
       case list of
         []       -> []
         (x : xs) -> mapFun x : (f mapFun xs)
-

@@ -30,4 +30,3 @@ eitherAssoc = (assocFromLeft, assocFromRight)
     assocFromRight (Left (Left x))  = Left x
     assocFromRight (Left (Right x)) = Right (Left x)
     assocFromRight (Right x)        = Right (Right x)
-
