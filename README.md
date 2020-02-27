@@ -1,1 +1,2 @@
-# -fp-homework
+# fp-homework
+Functional Programming Course (ITMO University), homework.
