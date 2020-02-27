@@ -9,13 +9,13 @@ import Data.Function (fix)
 
 -- |This function creates infinite list out of given argument.
 iterateElement :: a -> [a]
-iterateElement = fix (\f -> \x -> x : (f x))
+iterateElement = fix (\f x -> x : (f x))
 
 -- |This function returns n'th number of Fibonacci.
 fibonacci :: Integer -> Integer
 fibonacci = fix $ \f n ->
   if (n < 0)
-    then ((-1) ^ (abs n + 1)) * (f (abs  n))
+    then ((-1) ^ (abs n + 1)) * (f (abs n))
   else if n == 0
     then 0
   else if n <= 2
