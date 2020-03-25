@@ -1,7 +1,13 @@
-module Block3Spec where
+module Block3Spec
+  ( maybeConcatSpec
+  , eitherConcatSpec
+  , nonEmptySemigroupSpec
+  , thisOrThatSemigroupSpec
+  , nameSemigroupMonoidSpec
+  ) where
 
-import Block3 (maybeConcat, eitherConcat)
-import Data.Monoid
+import Block3
+import Data.Monoid (All (..), Sum (..))
 import Test.Hspec (SpecWith, describe, it, shouldBe)
 
 maybeConcatSpec :: SpecWith ()
@@ -49,5 +55,73 @@ eitherConcatSpec = describe "Block3.eitherConcat" $ do
       ]
       `shouldBe` ("Hey, how'r u?", All {getAll = False})
 
--- nonEmptySemigroupSpec :: SpecWith ()
--- nonEmptySemigroupSpec = describe "Block3.NonEmpty.Semigroup" $ do
+nonEmptySemigroupSpec :: SpecWith ()
+nonEmptySemigroupSpec = describe "Block3.NonEmpty (Semigroup)" $ do
+  it "should perform <> correctly" $ do
+    let x = (1 :: Integer)  :| [2, 3, 4, 5]
+    let y = 6  :| [7, 8, 9, 10]
+    let z = 11 :| [12, 13]
+    let l = x <> (y <> z)
+    let r = (x <> y) <> z
+    let res = (1 :| [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+    l `shouldBe` r
+    l `shouldBe` res
+    r `shouldBe` res
+
+
+thisOrThatSemigroupSpec :: SpecWith ()
+thisOrThatSemigroupSpec = describe "Block3.NonEmpty (Semigroup)" $ do
+  it "should perform <> correctly for This & This & This" $ do
+    let x = ((This "first") :: ThisOrThat String (Sum Int))
+    let y = This "second"
+    let z = This "third"
+    x <> (y <> z) `shouldBe` (x <> y) <> z
+
+  it "should perform <> correctly for This & This & That" $ do
+    let x = This "first"
+    let y = This "second"
+    let z = That (2 :: Sum Int)
+
+    x <> (y <> z) `shouldBe` (x <> y) <> z
+
+  it "should perform <> correctly for This & That & That" $ do
+    let x = This "first"
+    let y = That (1 :: Sum Int)
+    let z = That (2 :: Sum Int)
+    x <> (y <> z) `shouldBe` (x <> y) <> z
+
+  it "should perform <> correctly for That & That & That" $ do
+    let x = (That (1 :: Sum Int)) :: ThisOrThat String (Sum Int)
+    let y = That (2 :: Sum Int)
+    let z = That (3 :: Sum Int)
+    x <> (y <> z) `shouldBe` (x <> y) <> z
+
+  it "should preform <> correctly for This & Both & That" $ do
+    let x = Both "first" (2 :: Sum Int)
+    let y = This "second"
+    let z = That (4 :: Sum Int)
+    x <> (y <> z) `shouldBe` (x <> y) <> z
+
+  it "should preform <> correctly for This & Both & That" $ do
+    let x = Both "first" (2 :: Sum Int)
+    let y = Both "mine"  (3 :: Sum Int)
+    let z = That (4 :: Sum Int)
+    x <> (y <> z) `shouldBe` (x <> y) <> z
+
+nameSemigroupMonoidSpec :: SpecWith ()
+nameSemigroupMonoidSpec = describe "Block3.Name (Semigroup, Monoid)" $ do
+  it "should have correct mempty element" $ do
+    let name = Name "someName"
+    let x = mempty <> name
+    let y = name <> mempty
+    x `shouldBe` y
+    x `shouldBe` name
+    y `shouldBe` name
+
+  it "should perform <> correctly" $ do
+    let x = Name "first"
+    let y = Name "second"
+    let z = Name "third"
+    x <> (y <> z) `shouldBe` (x <> y) <> z
+    x <> (y <> z) `shouldBe` Name "first.second.third"
+    (x <> y) <> z `shouldBe` Name "first.second.third"

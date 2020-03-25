@@ -1,14 +1,27 @@
-module Block1 where
+module Block1
+  ( Day (..)
+  , nextDay
+  , afterDays
+  , isWeekend
+  , daysToParty
+  , Nat (..)
+  , Tree (..)
+  , isEmpty
+  , size
+  , lookup
+  , contains
+  , singleton
+  , insert
+  , delete
+  , fromList
+  ) where
 
 import Data.Ratio
 import Data.List.NonEmpty (NonEmpty (..), (<|))
 import Data.List(sort)
 import Prelude hiding (lookup)
 
-------------
--- Task 1 --
-------------
-data WeekDay
+data Day
   = Monday
   | Tuesday
   | Wednesday
@@ -18,7 +31,7 @@ data WeekDay
   | Sunday
   deriving (Show)
 
-instance Enum WeekDay where
+instance Enum Day where
   toEnum x =
     case x of
       0 -> Monday
@@ -40,26 +53,26 @@ instance Enum WeekDay where
       Saturday  -> 5
       Sunday    -> 6
 
-nextDay :: WeekDay -> WeekDay
+instance Eq Day where
+  fstDay == sndDay = (fromEnum fstDay) == (fromEnum sndDay)
+
+nextDay :: Day -> Day
 nextDay Sunday = Monday
 nextDay day    = succ day
 
-afterDays :: Int -> WeekDay -> WeekDay
+afterDays :: Int -> Day -> Day
 afterDays shift day = toEnum $ ((fromEnum day) + shift) `mod` 7
 
-isWeekend :: WeekDay -> Bool
+isWeekend :: Day -> Bool
 isWeekend Saturday = True
 isWeekend Sunday   = True
 isWeekend _        = False
 
-daysToParty :: WeekDay -> Int
+daysToParty :: Day -> Int
 daysToParty Saturday = 6
 daysToParty Sunday   = 5
 daysToParty curDay   = fromEnum Friday - fromEnum curDay
 
-------------
--- Task 2 --
-------------
 data Nat
   = Z
   | S Nat
@@ -141,9 +154,6 @@ instance Integral Nat where
       let (q, r) = quotRem (n - m) m
       in (q + 1, r)
 
-------------
--- Task 3 --
-------------
 data Tree a
   = Nil
   | Node (NonEmpty a) (Tree a) (Tree a)

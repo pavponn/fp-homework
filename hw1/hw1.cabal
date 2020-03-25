@@ -18,14 +18,19 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Block1, Block2, Block3, Block4, Block5, Block6
+  exposed-modules:     Block1
+                     , Block2
+                     , Block3
+                     , Block4
+                     , Block5
+                     , Block6
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5
                      , mtl
                      , containers
   default-language:    Haskell2010
 
-test-suite hw2-spec
+test-suite hw1-spec
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
@@ -34,5 +39,20 @@ test-suite hw2-spec
                      , mtl
                      , hspec
   ghc-options:         -Wall
-  other-modules:       Block4Spec, Block5Spec, Block6Spec
+  other-modules:       Block2Spec
+                     , Block3Spec
+                     , Block4Spec
+                     , Block5Spec
+                     , Block6Spec
   default-language:    Haskell2010
+
+test-suite hw1-hedgehog
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             HedgehogTest.hs
+  build-depends:       base
+                     , hw1
+                     , hedgehog
+  ghc-options:         -Wall
+  other-modules:       Block2Hedgehog
+default-language:    Haskell2010

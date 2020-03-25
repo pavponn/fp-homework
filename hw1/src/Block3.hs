@@ -17,7 +17,7 @@ eitherConcat = foldr helper (mempty, mempty) where
   helper (Right r) (lm, rm) = (lm, r <> rm)
 
 data NonEmpty a = a :| [a]
-  deriving (Show)
+  deriving (Eq, Show)
 
 instance Semigroup (NonEmpty a) where
   (x :| xs) <> (y :| ys) = x :| (xs ++ y : ys)
@@ -26,7 +26,7 @@ data ThisOrThat a b
   = This a
   | That b
   | Both a b
-  deriving (Show)
+  deriving (Eq, Show)
 
 instance (Semigroup a, Semigroup b) => Semigroup (ThisOrThat a b) where
   This x1    <> This x2    = This (x1 <> x2)
@@ -39,7 +39,7 @@ instance (Semigroup a, Semigroup b) => Semigroup (ThisOrThat a b) where
   Both x  y1 <> That y2    = Both x          (y1 <> y2)
   Both x1 y1 <> Both x2 y2 = Both (x1 <> x2) (y1 <> y2)
 
-newtype Name = Name String deriving (Show)
+newtype Name = Name String deriving (Eq, Show)
 
 instance Semigroup Name where
   Name "" <> Name s  = Name s
