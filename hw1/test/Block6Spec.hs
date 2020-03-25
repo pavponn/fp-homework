@@ -1,8 +1,22 @@
 module Block6Spec where
 
 import Block6
+import Control.Applicative
+import Test.Hspec (SpecWith, describe, it, shouldBe)
 
-import Test.Hspec (Spec, SpecWith, describe, it, shouldBe)
+parserSpec :: SpecWith ()
+parserSpec = describe "Block6.Parser" $ do
+  it "should be correct functor" $ do
+    runParser ((*2) <$> element 5) [5, 1, 2] `shouldBe` Just (10, [1, 2])
+  it "should be correct applicative" $ do
+    runParser ((+) <$> satisfy (> 2) <*> satisfy (> 3)) [3, 4]
+      `shouldBe` Just (7, [])
+  it "should be correct alternative" $ do
+    runParser (satisfy (>2) <|> satisfy (==(-1))) [-1, 4]
+      `shouldBe` Just (-1, [4])
+  it "should be correct monad"  $ do
+    runParser (element 'a' >>= \a  -> element 'b' >>= \b -> return [a,'+', b]) "abc"
+      `shouldBe` Just ("a+b", "c")
 
 okSpec :: SpecWith ()
 okSpec = describe "Block6.ok" $ do
@@ -68,3 +82,16 @@ intParserSpec = describe "Block6.intParser" $ do
       runParser intParser "aaa" `shouldBe` Nothing
       runParser intParser "+ 25 a" `shouldBe` Nothing
 
+listlistParserSpec :: SpecWith ()
+listlistParserSpec = describe "Block6.listlistParser" $ do
+  it "should accept and parse correclty" $ do
+    runParser listlistParser "0" `shouldBe` Just ([[]], "")
+    runParser listlistParser "1, 1" `shouldBe` Just ([[1]], "")
+    runParser listlistParser "2, 1,+10, 3,5,-7, 2"
+      `shouldBe` Just ([[1, 10], [5, -7, 2]], "")
+    runParser listlistParser "2, 1,+102, 1, 1, 0, 1, 1, 2, 1, -3"
+      `shouldBe` Just ([[1,102],[1],[],[1],[1,-3]],"")
+  it "should reject incorrect input" $ do
+    runParser listlistParser "1 2, 3" `shouldBe` Nothing
+    runParser listlistParser "1, -40, 3, 1, 2" `shouldBe` Nothing
+    runParser listlistParser "1, 2 aa" `shouldBe` Nothing

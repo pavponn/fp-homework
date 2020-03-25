@@ -25,14 +25,6 @@ library
                      , containers
   default-language:    Haskell2010
 
-executable hw2
-  hs-source-dirs:      app
-  main-is:             Main.hs
-  ghc-options:         -Wall
-  build-depends:       base
-                     , hw1
-  default-language:    Haskell2010
-
 test-suite hw2-spec
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
@@ -41,6 +33,6 @@ test-suite hw2-spec
                      , hw1
                      , mtl
                      , hspec
-  ghc-options:         -Wall -threaded
-  other-modules:       Block6Spec
+  ghc-options:         -Wall
+  other-modules:       Block4Spec, Block5Spec, Block6Spec
   default-language:    Haskell2010

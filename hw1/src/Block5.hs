@@ -1,6 +1,11 @@
-module Block5 where
+module Block5
+  ( Expr(..)
+  , ArithmeticError(..)
+  , eval
+  , moving
+  ) where
 
-import Control.Monad.State (State, evalState, get, put, state)
+import Control.Monad.State (State, evalState, get, put)
 import Data.Sequence hiding (reverse)
 import Prelude hiding (length)
 
@@ -8,7 +13,7 @@ data Expr
   = Const Int
   | Add Expr Expr
   | Sub Expr Expr
-  | Prod Expr Expr
+  | Mul Expr Expr
   | Div Expr Expr
   | Pow Expr Expr
   deriving (Show)
@@ -16,7 +21,7 @@ data Expr
 data ArithmeticError
   = DivisionByZeroError
   | NegativePowerError
-  deriving (Show)
+  deriving (Eq, Show)
 
 type ErrorOrInt = Either ArithmeticError Int
 
@@ -26,7 +31,7 @@ eval expr =
     (Const x)    -> Right x
     (Add  e1 e2) -> evalOp (simpleOp (+)) e1 e2
     (Sub  e1 e2) -> evalOp (simpleOp (-)) e1 e2
-    (Prod e1 e2) -> evalOp (simpleOp (*)) e1 e2
+    (Mul  e1 e2) -> evalOp (simpleOp (*)) e1 e2
     (Div  e1 e2) -> evalOp safeDiv        e1 e2
     (Pow  e1 e2) -> evalOp safePow        e1 e2
   where
@@ -41,7 +46,7 @@ eval expr =
 
     safeDiv :: Int -> Int -> ErrorOrInt
     safeDiv x y =
-      if x == 0 then Left DivisionByZeroError
+      if y == 0 then Left DivisionByZeroError
       else Right $ x `div` y
 
     safePow :: Int -> Int -> ErrorOrInt
@@ -78,15 +83,15 @@ moving size list
 
 simpleMovingAlgorithm :: (Fractional t) => State (AlgorithmState t) [t]
 simpleMovingAlgorithm = do
-  (AlgorithmState list sz queue res curSum index) <- get
+  (AlgorithmState list sz queue res curSum curIndex) <- get
   case list of
     []     -> return res
     (x:xs) -> do
       let (val, q)  = getAndDelete queue (sz - 1)
       let newSum    = curSum + x - val
-      let newResult = newSum / (fromIntegral $ min sz index) : res
+      let newResult = newSum / (fromIntegral $ min sz curIndex) : res
       let newQueue  = x <| q
-      put (AlgorithmState xs sz newQueue newResult newSum (index + 1))
+      put (AlgorithmState xs sz newQueue newResult newSum (curIndex + 1))
       simpleMovingAlgorithm
 
 getAndDelete :: (Fractional t) => Seq t -> Int -> (t, Seq t)

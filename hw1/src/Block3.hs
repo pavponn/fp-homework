@@ -1,4 +1,11 @@
-module Block3 where
+module Block3
+  ( maybeConcat
+  , eitherConcat
+  , NonEmpty(..)
+  , ThisOrThat(..)
+  , Name(..)
+  , Endo(..)
+  )where
 
 maybeConcat :: [Maybe [a]] -> [a]
 maybeConcat = foldr ((<>) . concat) []
@@ -32,8 +39,7 @@ instance (Semigroup a, Semigroup b) => Semigroup (ThisOrThat a b) where
   Both x  y1 <> That y2    = Both x          (y1 <> y2)
   Both x1 y1 <> Both x2 y2 = Both (x1 <> x2) (y1 <> y2)
 
-newtype Name = Name String
-  deriving (Show)
+newtype Name = Name String deriving (Show)
 
 instance Semigroup Name where
   Name "" <> Name s  = Name s
