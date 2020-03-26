@@ -24,6 +24,7 @@ library
                      , Block4
                      , Block5
                      , Block6
+                     , BlockBonus
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5
                      , mtl
