@@ -1,7 +1,7 @@
 import Test.Hspec (SpecWith, hspec)
 
-import Block1Spec (nextDaySpec, afterDaysSpec, isWeekendSpec, daysToPartySpec)
-import Block2Spec (splitOnSpec, joinWithSpec)
+import Block1Spec (afterDaysSpec, daysToPartySpec, isWeekendSpec, natSpec, nextDaySpec, treeSpec)
+import Block2Spec (joinWithSpec, splitOnSpec)
 import Block3Spec (eitherConcatSpec, maybeConcatSpec, nameSemigroupMonoidSpec,
                    nonEmptySemigroupSpec, thisOrThatSemigroupSpec)
 import Block4Spec (stringSumSpec)
@@ -25,6 +25,8 @@ block1Tests = do
   afterDaysSpec
   isWeekendSpec
   daysToPartySpec
+  natSpec
+  treeSpec
 
 block2Tests :: SpecWith ()
 block2Tests = do

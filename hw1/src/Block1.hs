@@ -86,8 +86,8 @@ instance Num Nat where
   n + Z     = n
   n + (S m) = S (n + m)
 
-  n * Z     = Z
-  n * (S m) = (n * m) + m
+  _ * Z     = Z
+  n * (S m) = (n * m) + n
 
   abs = id
 
@@ -159,39 +159,47 @@ data Tree a
   | Node (NonEmpty a) (Tree a) (Tree a)
   deriving (Show)
 
-isEmpty :: (Ord a) => Tree a -> Bool
+-- |Checks whether given Tree is empty.
+isEmpty :: Tree a -> Bool
 isEmpty Nil = True
 isEmpty _   = False
 
-size :: (Ord a) => Tree a -> Int
+-- |Returns size of the given Tree.
+size :: Tree a -> Int
 size Nil           = 0
 size (Node xs l r) = length xs + size l + size r
 
+-- |Checks whether element is in Tree,
+-- returns `Just element` if it exists, otherwise Nothing.
 lookup :: (Ord a) => a -> Tree a -> Maybe a
 lookup _ Nil = Nothing
 lookup e (Node (x :| _) l r) =
   case compare e x of
-    LT -> lookup e r
-    GT -> lookup e l
+    LT -> lookup e l
+    GT -> lookup e r
     EQ -> Just x
 
+-- |Checks whether element is in Tree,
 contains :: (Ord a) => a -> Tree a -> Bool
 contains e tree =
   case lookup e tree of
     Nothing -> False
     _       -> True
 
+-- |Creates Tree from one element.
 singleton :: (Ord a) => a -> Tree a
 singleton e = Node (e :| []) Nil Nil
 
+-- |Inserts element in the tree.
 insert :: (Ord a) => a -> Tree a -> Tree a
 insert e Nil = singleton e
-insert e (Node list@(x :| xs) l r) =
+insert e (Node list@(x :| _) l r) =
   case compare e x of
     LT -> (Node list (insert e l) r)
     GT -> (Node list l (insert e r))
     EQ -> (Node (e <| list) l r)
 
+-- |Deletes element in the tree.
 delete :: (Ord a) => a -> Tree a -> Tree a
 delete _ Nil = Nil
 delete e (Node list@(x :| xs) l r) =
@@ -203,13 +211,14 @@ delete e (Node list@(x :| xs) l r) =
             [] -> unify l r
   where
     unify :: Ord a => Tree a -> Tree a -> Tree a
-    unify Nil  r   = r
-    unify l    Nil = l
-    unify l    r   = case l of
-      (Node lvals ll lr) -> (Node lvals ll (unify lr r))
+    unify Nil  right = right
+    unify left Nil   = left
+    unify left right = case left of
+      (Node lvals ll lr) -> (Node lvals ll (unify lr right))
 
+-- |Creates Tree from list.
 fromList :: Ord a => [a] -> Tree a
-fromList  = foldr insert  Nil
+fromList = foldr insert  Nil
 
 {-
 bigTree = fromList [1,2,3,4,5,6,1,1,1,100]

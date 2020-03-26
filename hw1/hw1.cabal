@@ -39,7 +39,8 @@ test-suite hw1-spec
                      , mtl
                      , hspec
   ghc-options:         -Wall
-  other-modules:       Block2Spec
+  other-modules:       Block1Spec
+                     , Block2Spec
                      , Block3Spec
                      , Block4Spec
                      , Block5Spec

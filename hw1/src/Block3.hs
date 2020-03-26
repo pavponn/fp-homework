@@ -7,21 +7,25 @@ module Block3
   , Endo(..)
   )where
 
+-- |Concats list of lists inside Maybe in one list.
 maybeConcat :: [Maybe [a]] -> [a]
 maybeConcat = foldr ((<>) . concat) []
 
+-- |Concats list of monoids packed into Left/Right in pair.
 eitherConcat :: (Monoid m1, Monoid m2) => [Either m1 m2] -> (m1, m2)
 eitherConcat = foldr helper (mempty, mempty) where
   helper :: (Monoid m1, Monoid m2) => Either m1 m2 -> (m1, m2) -> (m1, m2)
   helper (Left l)  (lm, rm) = (l <> lm, rm)
   helper (Right r) (lm, rm) = (lm, r <> rm)
 
+-- |NonEmpty - list, but always has at least one element.
 data NonEmpty a = a :| [a]
   deriving (Eq, Show)
 
 instance Semigroup (NonEmpty a) where
   (x :| xs) <> (y :| ys) = x :| (xs ++ y : ys)
 
+-- |ThisOrThat - contains element of one of two types or both&
 data ThisOrThat a b
   = This a
   | That b

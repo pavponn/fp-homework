@@ -1,11 +1,16 @@
-module Block4 where
+module Block4
+  ( stringSum
+  , Tree (..)
+  ) where
 
 import Block3 (NonEmpty (..))
 import Text.Read (readMaybe)
 
+-- |Calculates ssum of Ints that occurr in the string.
 stringSum :: String -> Maybe Int
 stringSum s = traverse readMaybe (words s) >>= Just . sum
 
+-- |Represents simple binary tree.
 data Tree a
   = Branch (Tree a) (Tree a)
   | Leaf a

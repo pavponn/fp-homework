@@ -9,6 +9,7 @@ import Control.Monad.State (State, evalState, get, put)
 import Data.Sequence hiding (reverse)
 import Prelude hiding (length)
 
+-- |Type that represents arithmetic expression.
 data Expr
   = Const Int
   | Add Expr Expr
@@ -18,6 +19,7 @@ data Expr
   | Pow Expr Expr
   deriving (Show)
 
+-- |Type that represents arithmetic error.
 data ArithmeticError
   = DivisionByZeroError
   | NegativePowerError
@@ -25,6 +27,8 @@ data ArithmeticError
 
 type ErrorOrInt = Either ArithmeticError Int
 
+-- |Evaluates given expression, return it's value packed in Right.
+-- If error occurred returns Left ArithmeticError.
 eval :: Expr -> ErrorOrInt
 eval expr =
   case expr of
@@ -74,6 +78,8 @@ algoStateInit size list =
   , algoIndex   = 1
   }
 
+-- |Returns result for given int and list
+-- calculated by simple moving average algorithm.
 moving :: (Fractional t) => Int -> [t] -> [t]
 moving size list
   | size <= 0 = error "Positive integer expected as an argument"
