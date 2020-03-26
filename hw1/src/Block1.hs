@@ -20,6 +20,7 @@ import Data.List.NonEmpty (NonEmpty (..), (<|))
 import Data.Ratio
 import Prelude hiding (lookup)
 
+-- |Data type that represents days of the week.
 data Day
   = Monday
   | Tuesday
@@ -72,6 +73,7 @@ daysToParty Saturday = 6
 daysToParty Sunday   = 5
 daysToParty curDay   = fromEnum Friday - fromEnum curDay
 
+-- |Data type that represents Nat numbers.
 data Nat
   = Z
   | S Nat
@@ -153,6 +155,7 @@ instance Integral Nat where
       let (q, r) = quotRem (n - m) m
       in (q + 1, r)
 
+-- |Data type that represents binary tree, may be used as a binary search tree.
 data Tree a
   = Nil
   | Node (NonEmpty a) (Tree a) (Tree a)
