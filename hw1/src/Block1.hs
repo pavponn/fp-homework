@@ -16,9 +16,9 @@ module Block1
   , fromList
   ) where
 
-import Data.Ratio
+import Data.List (sort)
 import Data.List.NonEmpty (NonEmpty (..), (<|))
-import Data.List(sort)
+import Data.Ratio
 import Prelude hiding (lookup)
 
 data Day
@@ -144,7 +144,7 @@ instance Real Nat where
 instance Integral Nat where
   toInteger n = toIntegerHelp n 0 where
     toIntegerHelp :: Nat -> Integer -> Integer
-    toIntegerHelp Z acc = acc
+    toIntegerHelp Z acc     = acc
     toIntegerHelp (S m) acc = toIntegerHelp m (acc + 1)
 
   quotRem _ Z = error "Division by zero"
@@ -208,7 +208,7 @@ delete e (Node list@(x :| xs) l r) =
     GT -> (Node list l (delete e r))
     EQ -> case xs of
             (xx : xxs) -> (Node (xx :| xxs) l r)
-            [] -> unify l r
+            []         -> unify l r
   where
     unify :: Ord a => Tree a -> Tree a -> Tree a
     unify Nil  right = right

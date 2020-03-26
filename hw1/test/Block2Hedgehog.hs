@@ -2,7 +2,7 @@
 
 module Block2Hedgehog (tests) where
 
-import Block2 (splitOn, joinWith)
+import Block2 (joinWith, splitOn)
 import Data.Foldable (toList)
 import Hedgehog
 
