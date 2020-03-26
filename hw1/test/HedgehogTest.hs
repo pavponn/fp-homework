@@ -1,5 +1,3 @@
-module Main where
-
 import qualified Block1Hedgehog (tests)
 import qualified Block2Hedgehog (tests)
 

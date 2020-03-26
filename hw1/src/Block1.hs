@@ -16,7 +16,6 @@ module Block1
   , fromList
   ) where
 
-import Data.List (sort)
 import Data.List.NonEmpty (NonEmpty (..), (<|))
 import Data.Ratio
 import Prelude hiding (lookup)
@@ -95,9 +94,9 @@ instance Num Nat where
   signum _ = 1
 
   fromInteger x
-    | x == 0 = Z
-    | x > 0  = S $ fromInteger $ x - 1
-    | x < 0  = error "Invalid argument"
+    | x == 0     = Z
+    | x > 0      = S $ fromInteger $ x - 1
+    | otherwise  = error "Invalid argument"
 
   n - Z         = n
   Z - _         = Z
@@ -122,9 +121,9 @@ instance Ord Nat where
 -- typeclass `Integral`.
 instance Enum Nat where
   toEnum x
-    | x == 0 = Z
-    | x > 0  = S $ toEnum $ x - 1
-    | x < 0  = error "Invalid argument"
+    | x == 0     = Z
+    | x > 0      = S $ toEnum $ x - 1
+    | otherwise  = error "Invalid argument"
 
   fromEnum n = fromEnumHelp n 0 where
     fromEnumHelp :: Nat -> Int -> Int
@@ -213,8 +212,7 @@ delete e (Node list@(x :| xs) l r) =
     unify :: Ord a => Tree a -> Tree a -> Tree a
     unify Nil  right = right
     unify left Nil   = left
-    unify left right = case left of
-      (Node lvals ll lr) -> (Node lvals ll (unify lr right))
+    unify (Node lvals ll lr) right = (Node lvals ll (unify lr right))
 
 -- |Creates Tree from list.
 fromList :: Ord a => [a] -> Tree a

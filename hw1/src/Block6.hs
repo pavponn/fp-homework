@@ -19,7 +19,7 @@ instance Functor (Parser s) where
   fmap f p =  Parser fun where
     fun dat =
       case (runParser p dat) of
-        (Just (a, dat)) -> Just (f a, dat)
+        (Just (a, dat')) -> Just (f a, dat')
         Nothing         -> Nothing
 
 instance Applicative (Parser s) where

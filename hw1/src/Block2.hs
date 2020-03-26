@@ -1,4 +1,5 @@
-{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE InstanceSigs         #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Block2
   ( splitOn

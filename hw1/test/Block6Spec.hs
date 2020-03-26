@@ -7,12 +7,12 @@ import Test.Hspec (SpecWith, describe, it, shouldBe)
 parserSpec :: SpecWith ()
 parserSpec = describe "Block6.Parser" $ do
   it "should be correct functor" $ do
-    runParser ((*2) <$> element 5) [5, 1, 2] `shouldBe` Just (10, [1, 2])
+    runParser ((*2) <$> element (5 :: Integer)) [5, 1, 2] `shouldBe` Just (10, [1, 2])
   it "should be correct applicative" $ do
-    runParser ((+) <$> satisfy (> 2) <*> satisfy (> 3)) [3, 4]
+    runParser ((+) <$> satisfy (> 2) <*> satisfy (> 3)) [3 :: Integer, 4]
       `shouldBe` Just (7, [])
   it "should be correct alternative" $ do
-    runParser (satisfy (>2) <|> satisfy (==(-1))) [-1, 4]
+    runParser (satisfy (>2) <|> satisfy (==(-1))) [-1 :: Integer, 4]
       `shouldBe` Just (-1, [4])
   it "should be correct monad"  $ do
     runParser (element 'a' >>= \a  -> element 'b' >>= \b -> return [a,'+', b]) "abc"
@@ -35,14 +35,14 @@ eofSpec = describe "Block6.eof" $ do
 satisfySpec :: SpecWith ()
 satisfySpec = describe "Block6.satisfy" $ do
   it "should accept element that satisfies predicate" $ do
-    runParser (satisfy (> 2)) [5,1] `shouldBe` Just (5, [1])
+    runParser (satisfy (> 2)) [5 :: Integer, 1] `shouldBe` Just (5, [1])
   it "should reject element that doesn't satisfy predicate" $ do
-    runParser (satisfy (< 2)) [5,1] `shouldBe` Nothing
+    runParser (satisfy (< 2)) [5 :: Integer, 1] `shouldBe` Nothing
 
 elementSpec :: SpecWith ()
 elementSpec = describe "Block6.element" $ do
   it "should parse correct element" $ do
-    runParser (element 5) [5,1,2] `shouldBe` Just (5, [1,2])
+    runParser (element 5) [5 :: Integer, 1, 2] `shouldBe` Just (5, [1,2])
   it "should fail on empty input" $ do
     runParser (element '0') [] `shouldBe` Nothing
   it "should fail on incorrect element" $ do
@@ -51,9 +51,9 @@ elementSpec = describe "Block6.element" $ do
 streamSpec :: SpecWith ()
 streamSpec = describe "Block6.stream" $ do
   it "should parse correct stream" $ do
-    runParser (stream [5,1]) [5,1,2] `shouldBe` Just ([5,1], [2])
+    runParser (stream [5, 1]) [5 :: Integer, 1, 2] `shouldBe` Just ([5,1], [2])
   it "should fail on empty input" $ do
-    runParser (stream [2, 22]) [] `shouldBe` Nothing
+    runParser (stream [2 :: Integer, 22]) [] `shouldBe` Nothing
   it "should fail on incorrect stream" $ do
     runParser (stream "aab") "aaab" `shouldBe` Nothing
 

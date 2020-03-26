@@ -3,10 +3,8 @@
 module Block1Hedgehog (tests) where
 
 import Block1 (Nat (..))
-import Data.Foldable (toList)
 import Hedgehog
 
-import qualified Data.List as List
 import qualified Hedgehog.Gen as Gen
 import qualified Hedgehog.Range as Range
 
@@ -22,7 +20,7 @@ tests = checkParallel $ Group "Block1 properties" [
 propertyNatFromIntegerToInteger :: Property
 propertyNatFromIntegerToInteger = property $
   forAll genInteger >>= \x ->
-  toInteger (fromInteger x) === x
+  toInteger ((fromInteger x) :: Nat) === x
 
 propertyZmultiply1 :: Property
 propertyZmultiply1 = property $
